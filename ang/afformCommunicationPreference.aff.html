@@ -1,0 +1,17 @@
+<af-form ctrl="afform">
+  <af-entity data="{contact_type: 'Individual'}" type="Contact" name="Individual1" label="Individual 1" actions="{update: true}" security="RBAC" url-autofill="0" autofill="user" />
+  <fieldset af-fieldset="Individual1">
+    <legend class="af-text">Your information</legend>
+    <af-field name="first_name" />
+    <af-field name="last_name" />
+    <div af-join="Email" data="{is_primary: true}">
+      <div class="af-container">
+        <af-field name="email" />
+      </div>
+    </div>
+    <div class="af-container">
+      <p class="af-text"></p>
+      <button class="af-button btn btn-primary" crm-icon="fa-check" ng-click="afform.submit()">Submit</button>
+    </div>
+  </fieldset>
+</af-form>
