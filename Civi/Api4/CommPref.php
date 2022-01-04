@@ -13,19 +13,16 @@ use Civi\Api4\Generic\BasicGetFieldsAction;
 class CommPref extends Generic\BasicEntity {
 
   /**
-   * CommPref GetGroup.
+   * CommPref GetGroups.
    *
-   * @return \Civi\Api4\Action\CommPref\GetGroup
+   * @return \Civi\Api4\Action\CommPref\GetGroups
    *
    * @param bool $checkPermissions
    *
    * @throws \API_Exception
    */
-  public static function getGroup($checkPermissions = TRUE): Action\CommPref\GetGroup {
-    // return (new \Civi\Api4\Action\CommPref\GetGroup(__CLASS__, __FUNCTION__))
-    //   ->setCheckPermissions($checkPermissions);
-
-    $action = new \Civi\Api4\Action\CommPref\GetGroup(static::class, __FUNCTION__);
+  public static function getGroups($checkPermissions = TRUE): Action\CommPref\GetGroups {
+    $action = new \Civi\Api4\Action\CommPref\GetGroups(static::class, __FUNCTION__);
     return $action->setCheckPermissions($checkPermissions);
   }
 
@@ -38,7 +35,7 @@ class CommPref extends Generic\BasicEntity {
    * @return array
    */
   public static function permissions():array {
-    return ['getGroup' => 'access CiviCRM'];
+    return ['getGroups' => 'access CiviCRM'];
   }
 
   /**

@@ -5,13 +5,13 @@ use Civi\Api4\Generic\BasicGetAction;
 use Civi\Api4\Generic\Result;
 
 /**
- *  Class GetGroup.
+ *  Class GetGroups.
  *
  * Provided by the CommPref extension.
  *
  * @package Civi\Api4
  */
-class GetGroup extends BasicGetAction {
+class GetGroups extends BasicGetAction {
 
   /**
    * @inheritDoc
@@ -21,7 +21,6 @@ class GetGroup extends BasicGetAction {
    * @throws \API_Exception
    */
   public function _run(Result $result) {
-
     // get all public groups
     $publicGroups = \Civi\Api4\Group::get(FALSE)
       ->addWhere('visibility', '=', 'Public Pages')
