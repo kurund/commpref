@@ -10,39 +10,13 @@ use Civi\Api4\Generic\BasicGetFieldsAction;
  *
  * @package Civi\Api4
  */
-class CommPref extends Generic\BasicEntity {
-
-  /**
-   * CommPref GetGroups.
-   *
-   * @return \Civi\Api4\Action\CommPref\GetGroups
-   *
-   * @param bool $checkPermissions
-   *
-   * @throws \API_Exception
-   */
-  public static function getGroups($checkPermissions = TRUE): Action\CommPref\GetGroups {
-    $action = new \Civi\Api4\Action\CommPref\GetGroups(static::class, __FUNCTION__);
-    return $action->setCheckPermissions($checkPermissions);
-  }
-
-  /**
-   * Get permissions.
-   *
-   * It may be that we don't need a permission check on this api at all at there is a check on the entity
-   * retrieved.
-   *
-   * @return array
-   */
-  public static function permissions():array {
-    return ['getGroups' => 'access CiviCRM'];
-  }
+class CommPref extends Generic\AbstractEntity {
 
   /**
    * @return \Civi\Api4\Generic\BasicGetFieldsAction
    */
   public static function getFields($checkPermissions = TRUE) {
-    return (new Generic\BasicGetFieldsAction(__CLASS__, __FUNCTION__, function(BasicGetFieldsAction $self) {
+    return (new Generic\BasicGetFieldsAction(__CLASS__, __FUNCTION__, function($getFieldsAction) {
       return [
         [
           'name' => 'contact_id',
