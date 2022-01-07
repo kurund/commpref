@@ -12,20 +12,19 @@
   <div class="af-container">
     <fieldset af-fieldset="Individual1">
       <div af-join="CommPrefGroup">
-        <div class="af-container af-layout-cols">
+        <div class="af-container">
           <div class="af-markup">
             <p>
               Our supporters are vital to our success and we&rsquo;re delighted you&rsquo;re part of
               the Population Matters movement, keeping up to date with our campaigns, activities and
-              events.<br />
-              <br />
+              events.<br /><br />
               Please use this page to change what emails you receive and update your details.
             </p>
-
-            <!-- <af-field name="group_498"/>
-              <af-field name="group_524"/> -->
-            <af-field name="email_optout" />
           </div>
+          <af-field name="group_2" />
+          <af-field name="group_3" />
+          <af-field name="group_4" />
+          <af-field name="email_optout" />
         </div>
       </div>
       <legend class="af-text">My contact details</legend>
@@ -42,7 +41,6 @@
           <af-field name="state_province_id" defn="{label: 'Country/State', input_attrs: {}}" />
           <af-field name="postal_code" />
         </div>
-        <div class="af-container af-layout-inline"></div>
       </div>
       <div af-join="CommPrefPhone">
         <af-field name="phone_mobile" />

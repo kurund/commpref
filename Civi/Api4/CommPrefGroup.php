@@ -53,6 +53,7 @@ class CommPrefGroup extends Generic\AbstractEntity {
           'data_type' => 'Boolean',
           'title' => $group['title'],
           'required' => FALSE,
+          "input_type" => "CheckBox",
           'label' => ($group['frontend_description']) ? $group['frontend_description'] : $group['title'],
         ];
       }
