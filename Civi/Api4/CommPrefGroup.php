@@ -24,9 +24,7 @@ class CommPrefGroup extends Generic\AbstractEntity {
    */
   public static function getFields($checkPermissions = TRUE) {
     return (new Generic\BasicGetFieldsAction(__CLASS__, __FUNCTION__, function($getFieldsAction) {
-      // TODOS: need to loop through group and build the checkboxes
-
-      return [
+      $fields = [
         [
           'name' => 'contact_id',
           'data_type' => 'Integer',
@@ -35,20 +33,31 @@ class CommPrefGroup extends Generic\AbstractEntity {
           'fk_entity' => 'Contact',
         ],
         [
-          'name' => 'groups',
-          'data_type' => 'Array',
-          'title' => 'Groups',
-          'description' => 'Array of group IDs',
-        ],
-        [
           'name' => 'email_optout',
           'data_type' => 'Boolean',
           'title' => 'Opt out of email',
-          "input_type" => "Checkbox",
+          "input_type" => "CheckBox",
           "label" => "I don't want to receive emails from Population Matters.",
         ],
-
       ];
+
+      // loop through pubic group and build the checkboxes
+      // get all public groups
+      $publicGroups = \Civi\Api4\Group::get(FALSE)
+        ->addWhere('visibility', '=', 'Public Pages')
+        ->execute();
+
+      foreach ($publicGroups as $group) {
+        $fields[] = [
+          'name' => "group_" . $group['id'],
+          'data_type' => 'Boolean',
+          'title' => $group['title'],
+          'required' => FALSE,
+          'label' => ($group['frontend_description']) ? $group['frontend_description'] : $group['title'],
+        ];
+      }
+
+      return $fields;
     }))->setCheckPermissions($checkPermissions);
   }
 
