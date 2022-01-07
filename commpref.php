@@ -12,6 +12,15 @@ use CRM_Commpref_ExtensionUtil as E;
  */
 function commpref_civicrm_config(&$config) {
   _commpref_civix_civicrm_config($config);
+
+  // add listener to commumication preference form submit event
+  if (isset(Civi::$statics[__FUNCTION__])) {
+    return;
+  }
+
+  Civi::$statics[__FUNCTION__] = 1;
+
+  Civi::dispatcher()->addListener('civi.afform.submit', ['\Civi\CommPref\Form\Submit', 'process'], 10);
 }
 
 /**

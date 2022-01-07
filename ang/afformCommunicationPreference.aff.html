@@ -1,17 +1,55 @@
 <af-form ctrl="afform">
-  <af-entity data="{contact_type: 'Individual'}" type="Contact" name="Individual1" label="Individual 1" actions="{update: true}" security="RBAC" url-autofill="0" autofill="user" />
-  <fieldset af-fieldset="Individual1">
-    <legend class="af-text">Your information</legend>
-    <af-field name="first_name" />
-    <af-field name="last_name" />
-    <div af-join="Email" data="{is_primary: true}">
-      <div class="af-container">
+  <af-entity
+    data="{contact_type: 'Individual'}"
+    type="Contact"
+    name="Individual1"
+    label="Individual 1"
+    actions="{update: true}"
+    security="RBAC"
+    url-autofill="0"
+    autofill="user"
+  />
+  <div class="af-container">
+    <fieldset af-fieldset="Individual1">
+      <div af-join="CommPrefGroup">
+        <div class="af-container af-layout-cols">
+          <div class="af-markup">
+            <p>
+              Our supporters are vital to our success and we&rsquo;re delighted you&rsquo;re part of
+              the Population Matters movement, keeping up to date with our campaigns, activities and
+              events.<br />
+              <br />
+              Please use this page to change what emails you receive and update your details.
+            </p>
+
+            <!-- <af-field name="group_498"/>
+              <af-field name="group_524"/> -->
+          </div>
+        </div>
+      </div>
+      <legend class="af-text">My contact details</legend>
+      <div af-join="CommPrefEmail">
         <af-field name="email" />
       </div>
-    </div>
-    <div class="af-container">
-      <p class="af-text"></p>
-      <button class="af-button btn btn-primary" crm-icon="fa-check" ng-click="afform.submit()">Submit</button>
-    </div>
-  </fieldset>
+      <af-field name="first_name" />
+      <af-field name="last_name" />
+      <div af-join="Address">
+        <div class="af-container">
+          <af-field name="street_address" />
+          <af-field name="city" />
+          <af-field name="country_id" />
+          <af-field name="state_province_id" defn="{label: 'Country/State', input_attrs: {}}" />
+          <af-field name="postal_code" />
+        </div>
+        <div class="af-container af-layout-inline"></div>
+      </div>
+      <div af-join="CommPrefPhone">
+        <af-field name="phone_mobile" />
+        <af-field name="phone_landline" />
+      </div>
+    </fieldset>
+    <button class="af-button btn btn-primary" crm-icon="fa-check" ng-click="afform.submit()">
+      Submit
+    </button>
+  </div>
 </af-form>

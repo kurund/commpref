@@ -1,16 +1,23 @@
 <?php
 namespace Civi\Api4;
 
-use Civi\Api4\Generic\BasicGetFieldsAction;
-
 /**
- * CommPref entity.
+ * CommPrefEmail entity.
  *
  * Provided by the Communication Preference extension.
  *
  * @package Civi\Api4
  */
-class CommPref extends Generic\AbstractEntity {
+class CommPrefEmail extends Generic\AbstractEntity {
+
+  /**
+   * @param bool $checkPermissions
+   * @return Action\CommPrefEmail\Get
+   */
+  public static function get($checkPermissions = TRUE) {
+    return (new Action\CommPrefEmail\Get(__CLASS__, __FUNCTION__))
+      ->setCheckPermissions($checkPermissions);
+  }
 
   /**
    * @return \Civi\Api4\Generic\BasicGetFieldsAction
@@ -24,6 +31,16 @@ class CommPref extends Generic\AbstractEntity {
           'title' => 'Contact ID',
           'required' => TRUE,
           'fk_entity' => 'Contact',
+        ],
+        [
+          'name' => 'email',
+          'data_type' => 'String',
+          'title' => 'Email',
+          "input_type" => "Text",
+          "input_attrs" => [
+            "maxlength" => 254,
+          ],
+          "label" => "Email address",
         ],
       ];
     }))->setCheckPermissions($checkPermissions);
