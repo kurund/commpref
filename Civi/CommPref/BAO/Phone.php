@@ -89,7 +89,7 @@ class Phone {
    * @param string $phoneType
    */
   public static function deletePhone($contactId, $phoneType) {
-    \Civi\Api4\Phone::delete()
+    \Civi\Api4\Phone::delete(FALSE)
       ->addWhere('contact_id', '=', $contactId)
       ->addWhere('phone_type_id:name', '=', $phoneType)
       ->execute();

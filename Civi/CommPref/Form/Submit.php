@@ -13,12 +13,15 @@ class Submit {
       return;
     }
 
+    // get contact id
+    $contactId = $submittedValues[0]['fields']['id'];
+
     // process groups
 
     // process emails
 
     // process phone
-    \Civi\CommPref\BAO\Phone::processPhone($submittedValues[0]['fields']['id'], $submittedValues[0]['joins']['CommPrefPhone']);
+    \Civi\CommPref\BAO\Phone::processPhone($contactId, $submittedValues[0]['joins']['CommPrefPhone']);
 
   }
 
