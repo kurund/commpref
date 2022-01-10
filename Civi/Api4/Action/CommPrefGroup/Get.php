@@ -41,7 +41,7 @@ class Get extends \Civi\Api4\Generic\BasicGetAction {
     }
 
     $result[] = [
-      'contact_id' => 202,
+      'contact_id' => $this->_itemsToGet('contact_id')[0],
       'groups' => $groups,
       'email_optout' => FALSE,
     ];

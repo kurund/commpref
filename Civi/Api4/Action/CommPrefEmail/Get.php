@@ -13,9 +13,16 @@ use Civi\Api4\Generic\Result;
 class Get extends \Civi\Api4\Generic\BasicGetAction {
 
   public function _run(Result $result) {
+    // get primary email
+    $emails = \Civi\Api4\Email::get(FALSE)
+      ->addSelect('email')
+      ->addWhere('contact_id', '=', $this->_itemsToGet('contact_id')[0])
+      ->addWhere('is_primary', '=', TRUE)
+      ->execute();
+
     $result[] = [
-      'contact_id' => 202,
-      'email' => 'hello@example.org',
+      'contact_id' => $this->_itemsToGet('contact_id')[0],
+      'email' => $emails[0]['email'],
     ];
   }
 
