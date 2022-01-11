@@ -12,7 +12,7 @@ class Email {
    *
    * @return void
    */
-  public static function processEmail($contactId, $params) {
+  public static function process($contactId, $params) {
     // submitted values
     $submittedEmail = $params[0]['email'];
 
@@ -27,46 +27,34 @@ class Email {
     // get location types
     [$primaryLocationTypeId, $otherLocationTypeId] = self::getLocationTypes();
 
-    // check if submitted email is present for this contact
-    if (self::checkEmail($contactId, $submittedEmail)) {
+    // check if email verification is enabled
+    // TODOS: need to implement settings,
+    // commpref_verify_email, commpref_verify_location_type, commpref_verify_email_template
+    // $verifyEmail = \Civi::settings()->get('commpref_verify_email');
+    $verifyEmail = FALSE;
+
+    // if email verification is enabled, and the new email does not belong to this contact
+    // follow verification process:
+    // 1. add new email to contact with location type configured in the settings
+    // 2. get the configured verification template from settings
+    // 3. send the email to the new email
+    if ($verifyEmail && !self::checkEmail($contactId, $submittedEmail)) {
+      // add submitted email to contact with location type as per settings
+      $locationTypeId = \Civi::settings()->get('commpref_verify_location_type');
+      self::addEmail($contactId, $submittedEmail, $locationTypeId);
+
+      // send verification email
+      $emailTemplate = \Civi::settings()->get('commpref_verify_email_template');
+
+      // TODOS: need to implement email sending
+    }
+    else {
       // update current email as 'Other' location type
       self::updateEmail($contactId, $currentEmail, $otherLocationTypeId);
 
-      // update submitted email as primary location type
+      // update the email to primary location type
       self::updateEmail($contactId, $submittedEmail, $primaryLocationTypeId, TRUE);
     }
-    else {
-
-      // check if email verification is enabled
-      // TODOS: need to implement settings,
-      // commpref_verify_email, commpref_verify_location_type, commpref_verify_email_template
-      // $verifyEmail = \Civi::settings()->get('commpref_verify_email');
-      $verifyEmail = TRUE;
-
-      // if email verification is enabled, add new email to contact
-      // with location type configured in the settings
-      // get the configured verification template
-      // send the email
-      if ($verifyEmail) {
-        // add submitted email to contact with location type as per settings
-        $locationTypeId = \Civi::settings()->get('commpref_verify_location_type');
-        self::addEmail($contactId, $submittedEmail, $locationTypeId);
-
-        // send verification email
-        $emailTemplate = \Civi::settings()->get('commpref_verify_email_template');
-
-        // TODOS: need to implement email sending
-      }
-      else {
-        // update current email as 'Other' location type
-        self::updateEmail($contactId, $currentEmail, $otherLocationTypeId);
-
-        // update the email to primary location type
-        self::updateEmail($contactId, $submittedEmail, $primaryLocationTypeId, TRUE);
-      }
-
-    }
-
   }
 
   /**

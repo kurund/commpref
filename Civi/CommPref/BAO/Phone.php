@@ -12,7 +12,7 @@ class Phone {
    *
    * @return void
    */
-  public static function processPhone($contactId, $params) {
+  public static function process($contactId, $params) {
     // submitted values
     $phoneMobile = $params[0]['phone_mobile'];
     $phoneLandline = $params[0]['phone_landline'];

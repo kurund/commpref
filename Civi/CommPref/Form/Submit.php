@@ -19,9 +19,10 @@ class Submit {
     // process groups
 
     // process emails
+    \Civi\CommPref\BAO\Email::process($contactId, $submittedValues[0]['joins']['CommPrefEmail']);
 
     // process phone
-    \Civi\CommPref\BAO\Phone::processPhone($contactId, $submittedValues[0]['joins']['CommPrefPhone']);
+    \Civi\CommPref\BAO\Phone::process($contactId, $submittedValues[0]['joins']['CommPrefPhone']);
 
   }
 
