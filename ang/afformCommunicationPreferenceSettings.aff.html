@@ -1,0 +1,30 @@
+<af-form ctrl="afform">
+  <af-entity
+    data="{contact_type: 'Individual'}"
+    type="Contact"
+    name="Individual1"
+    label="Individual 1"
+    actions="{create: true, update: true}"
+    security="RBAC"
+    url-autofill="0"
+    autofill="user"
+  />
+  <!-- <af-entity
+    type="CommPrefSettings"
+    name="Settings"
+    label="Settings"
+    actions="{create: true, update: true}"
+    security="RBAC"
+  /> -->
+  <div class="af-container">
+    <fieldset af-fieldset="Individual1">
+      <div af-join="CommPrefSettings">
+        <af-field name="commpref_verify_email" />
+        <af-field name="commpref_verify_location_type" />
+      </div>
+    </fieldset>
+    <button class="af-button btn btn-primary" crm-icon="fa-check" ng-click="afform.submit()">
+      Save
+    </button>
+  </div>
+</af-form>

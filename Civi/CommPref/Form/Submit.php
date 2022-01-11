@@ -19,10 +19,14 @@ class Submit {
     // process groups
 
     // process emails
-    \Civi\CommPref\BAO\Email::process($contactId, $submittedValues[0]['joins']['CommPrefEmail']);
+    $emailData = \Civi\CommPref\BAO\Email::process($contactId, $submittedValues[0]['joins']['CommPrefEmail']);
 
     // process phone
-    \Civi\CommPref\BAO\Phone::process($contactId, $submittedValues[0]['joins']['CommPrefPhone']);
+    $phoneData = \Civi\CommPref\BAO\Phone::process($contactId, $submittedValues[0]['joins']['CommPrefPhone']);
+
+    // record activity
+    // comm pref updated
+    // privacy policy accepted
 
   }
 

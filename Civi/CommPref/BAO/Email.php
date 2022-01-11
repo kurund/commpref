@@ -44,7 +44,7 @@ class Email {
       self::addEmail($contactId, $submittedEmail, $locationTypeId);
 
       // send verification email
-      $emailTemplate = \Civi::settings()->get('commpref_verify_email_template');
+      // $emailTemplate = \Civi::settings()->get('commpref_verify_email_template');
 
       // TODOS: need to implement email sending
     }
@@ -55,6 +55,8 @@ class Email {
       // update the email to primary location type
       self::updateEmail($contactId, $submittedEmail, $primaryLocationTypeId, TRUE);
     }
+
+    return [$submittedEmail, $currentEmail];
   }
 
   /**

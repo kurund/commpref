@@ -36,6 +36,8 @@ class Phone {
     elseif ($phoneLandline != $landlineNumber) {
       self::updatePhone($contactId, $phoneLandline, 'Phone');
     }
+
+    return [$phoneMobile, $phoneLandline, $mobileNumber, $landlineNumber];
   }
 
   /**

@@ -52,19 +52,3 @@
     </button>
   </div>
 </af-form>
-
-<script>
-  CRM.$(function ($) {
-    $("input[id^='email_optout']").on("click", function () {
-      if ($("input[id ^='email_optout']").is(":checked")) {
-        $("input[id ^='group_2']").prop("checked", false);
-        $("input[id ^='group_2']").prop("disabled", true);
-        $("input[id ^='group_3']").prop("checked", false);
-        $("input[id ^='group_3']").prop("disabled", true);
-      } else {
-        $("input[id ^='group_2']").prop("disabled", false);
-        $("input[id ^='group_3']").prop("disabled", false);
-      }
-    });
-  });
-</script>

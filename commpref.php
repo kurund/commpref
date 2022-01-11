@@ -20,7 +20,8 @@ function commpref_civicrm_config(&$config) {
 
   Civi::$statics[__FUNCTION__] = 1;
 
-  Civi::dispatcher()->addListener('civi.afform.submit', ['\Civi\CommPref\Form\Submit', 'process'], 10);
+  Civi::dispatcher()->addListener('civi.afform.submit', ['\Civi\CommPref\Form\Submit', 'process'], 11);
+  Civi::dispatcher()->addListener('civi.afform.submit', ['\Civi\CommPref\Form\Settings', 'process'], 12);
 }
 
 /**
@@ -168,14 +169,14 @@ function commpref_civicrm_themes(&$themes) {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_navigationMenu
  */
-//function commpref_civicrm_navigationMenu(&$menu) {
-//  _commpref_civix_insert_navigation_menu($menu, 'Mailings', array(
-//    'label' => E::ts('New subliminal message'),
-//    'name' => 'mailing_subliminal_message',
-//    'url' => 'civicrm/mailing/subliminal',
-//    'permission' => 'access CiviMail',
-//    'operator' => 'OR',
-//    'separator' => 0,
-//  ));
-//  _commpref_civix_navigationMenu($menu);
-//}
+function commpref_civicrm_navigationMenu(&$menu) {
+  _commpref_civix_insert_navigation_menu($menu, 'Administer/System Settings', [
+    'label' => E::ts('Communication Preference Settings'),
+    'name' => 'comm-pref-settings',
+    'url' => CRM_Utils_System::url('civicrm/communication-preference-settings', NULL, TRUE),
+    'permission' => 'access CiviCRM',
+    'operator' => 'OR',
+    'separator' => 0,
+  ]);
+  _commpref_civix_navigationMenu($menu);
+}
