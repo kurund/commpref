@@ -2,7 +2,7 @@
 
 namespace Civi\CommPref\Form;
 
-class Submit {
+class Settings {
 
   public function process($event) {
 

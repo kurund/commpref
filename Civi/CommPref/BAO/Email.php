@@ -28,17 +28,14 @@ class Email {
     [$primaryLocationTypeId, $otherLocationTypeId] = self::getLocationTypes();
 
     // check if email verification is enabled
-    // TODOS: need to implement settings,
-    // commpref_verify_email, commpref_verify_location_type, commpref_verify_email_template
-    // $verifyEmail = \Civi::settings()->get('commpref_verify_email');
-    $verifyEmail = FALSE;
+    $verifyEmail = \Civi::settings()->get('commpref_verify_email');
 
     // if email verification is enabled, and the new email does not belong to this contact
     // follow verification process:
     // 1. add new email to contact with location type configured in the settings
     // 2. get the configured verification template from settings
     // 3. send the email to the new email
-    if ($verifyEmail && !self::checkEmail($contactId, $submittedEmail)) {
+    if ($verifyEmail && !self::checkEmailExist($contactId, $submittedEmail)) {
       // add submitted email to contact with location type as per settings
       $locationTypeId = \Civi::settings()->get('commpref_verify_location_type');
       self::addEmail($contactId, $submittedEmail, $locationTypeId);
@@ -85,14 +82,14 @@ class Email {
    *
    * @return bool
    */
-  public static function checkEmail($contactId, $email) {
+  public static function checkEmailExist($contactId, $email) {
     $emails = \Civi\Api4\Email::get(FALSE)
       ->addSelect('email')
       ->addWhere('contact_id', '=', $contactId)
       ->addWhere('email', '=', $email)
       ->execute();
 
-    return !empty($emails);
+    return $emails->rowCount ? TRUE : FALSE;
   }
 
   /**

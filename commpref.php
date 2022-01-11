@@ -20,8 +20,8 @@ function commpref_civicrm_config(&$config) {
 
   Civi::$statics[__FUNCTION__] = 1;
 
-  Civi::dispatcher()->addListener('civi.afform.submit', ['\Civi\CommPref\Form\Submit', 'process'], 11);
-  Civi::dispatcher()->addListener('civi.afform.submit', ['\Civi\CommPref\Form\Settings', 'process'], 12);
+  Civi::dispatcher()->addListener('civi.afform.submit', ['\Civi\CommPref\Form\Settings', 'process'], 100);
+  Civi::dispatcher()->addListener('civi.afform.submit', ['\Civi\CommPref\Form\Submit', 'process'], 101);
 }
 
 /**

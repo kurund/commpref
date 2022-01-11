@@ -20,15 +20,6 @@ class CommPrefSettings extends Generic\AbstractEntity {
   }
 
   /**
-   * @param bool $checkPermissions
-   * @return Action\CommPrefSettings\Update
-   */
-  public static function update($checkPermissions = TRUE) {
-    return (new Action\CommPrefSettings\Update(__CLASS__, __FUNCTION__))
-      ->setCheckPermissions($checkPermissions);
-  }
-
-  /**
    * @return \Civi\Api4\Generic\BasicGetFieldsAction
    */
   public static function getFields($checkPermissions = TRUE) {
