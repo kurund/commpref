@@ -17,6 +17,7 @@ class Submit {
     $contactId = $submittedValues[0]['fields']['id'];
 
     // process groups
+    $groupData = \Civi\CommPref\BAO\Group::process($contactId, $submittedValues[0]['joins']['CommPrefGroup']);
 
     // process emails
     $emailData = \Civi\CommPref\BAO\Email::process($contactId, $submittedValues[0]['joins']['CommPrefEmail']);

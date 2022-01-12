@@ -37,7 +37,10 @@ class Phone {
       self::updatePhone($contactId, $phoneLandline, 'Phone');
     }
 
-    return [$phoneMobile, $phoneLandline, $mobileNumber, $landlineNumber];
+    return [
+      'prev' => [$phoneMobile, $phoneLandline],
+      'current' => [$mobileNumber, $landlineNumber],
+    ];
   }
 
   /**

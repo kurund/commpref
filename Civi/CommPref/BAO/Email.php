@@ -53,7 +53,10 @@ class Email {
       self::updateEmail($contactId, $submittedEmail, $primaryLocationTypeId, TRUE);
     }
 
-    return [$submittedEmail, $currentEmail];
+    return [
+      'prev' => $submittedEmail,
+      'current' => $currentEmail,
+    ];
   }
 
   /**

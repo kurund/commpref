@@ -13,6 +13,9 @@ use Civi\Api4\Generic\Result;
 class Get extends \Civi\Api4\Generic\BasicGetAction {
 
   public function _run(Result $result) {
+    // get contact id
+    $contactId = $this->_itemsToGet('contact_id')[0];
+
     // get all public groups
     $publicGroups = \Civi\Api4\Group::get(FALSE)
       ->addWhere('visibility', '=', 'Public Pages')
@@ -20,7 +23,7 @@ class Get extends \Civi\Api4\Generic\BasicGetAction {
 
     // get all contact groups
     $contactGroups = \Civi\Api4\GroupContact::get(FALSE)
-      ->addWhere('contact_id', '=', $this->_itemsToGet('contact_id')[0])
+      ->addWhere('contact_id', '=', $contactId)
       ->execute();
 
     // build groups array based on contact groups
@@ -33,18 +36,21 @@ class Get extends \Civi\Api4\Generic\BasicGetAction {
           break;
         }
       }
-      $groups[$publicGroup['id']] = [
-        'joined' => $contactIsPartOfGroup,
-        'title' => $publicGroup['title'],
-        'key' => 'group_' . $publicGroup['id'],
-      ];
+
+      $groups['group_' . $publicGroup['id']] = $contactIsPartOfGroup;
     }
 
+    // get contact user optout value
+    $contacts = \Civi\Api4\Contact::get(FALSE)
+      ->addSelect('is_opt_out')
+      ->addWhere('id', '=', $contactId)
+      ->execute();
+
     $result[] = [
-      'contact_id' => $this->_itemsToGet('contact_id')[0],
-      'groups' => $groups,
-      'email_optout' => FALSE,
-    ];
+      'contact_id' => $contactId,
+      'email_optout' => $contacts[0]['is_opt_out'],
+    ] + $groups;
+
   }
 
 }
