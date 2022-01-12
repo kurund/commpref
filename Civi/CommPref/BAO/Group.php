@@ -16,27 +16,97 @@ class Group {
     // submitted values
     $submittedGroups = $params[0];
 
-    print_r($submittedGroups);
-    //
     // Array ( [email_optout] => [group_2] => [group_3] => [group_4] => 1 )
 
-    // get all public groups
+    // get current optout status
+    $currentOptout = self::getContactOptOutStatus($contactId);
 
     // get the current groups for this contact
+    $currentGroups = self::getCurrentGroups($contactId);
 
-    // updated the groups with approriate status
+    // loop through submitted groups
+    foreach ($submittedGroups as $field => $value) {
+      // check if it's a group field
+      if (strpos($field, 'group_') == FALSE) {
+        continue;
+      }
+
+      // get group id
+      $groupId = str_replace('group_', '', $field);
+
+      // check if the group is in the current groups
+
+      // determine if group is part of current group
+
+      // check the sumbitted value
+
+      // if the value is 1, and not part of current groups, add the group
+
+      // if the value is 1, and part of current groups, update group status to 'Added'
+
+      // if the value is 0, and part of current groups, update group status to 'Removed'
+
+      // if the value is 0, and not part of current groups, do nothing
+
+    }
 
     // update contact optout field
-    \Civi\Api4\Contact::update(FALSE)
-      ->addValue('is_opt_out', $submittedGroups['email_optout'])
-      ->addWhere('id', '=', $contactId)
-      ->execute();
+    self::updateOptOut($contactId, $submittedGroups['email_optout']);
 
     exit;
     return [
-      'prev' => '',
-      'current' => '',
+      'prev' => ['optout' => $currentOptout, 'groups' => $currentGroups],
+      'current' => ['optout' => $submittedGroups['email_optout'], 'groups' => $submittedGroups],
     ];
+  }
+
+  /**
+   * Function to add contact to group
+   *
+   * @param int $contactId
+   * @param int $groupId
+   *
+   * @return void
+   */
+  public static function addGroup($contactId, $groupId) {
+    // add contact to group
+    \Civi\Api4\GroupContact::create(FALSE)
+      ->addValue('group_id', $groupId)
+      ->addValue('contact_id', $contactId)
+      ->addValue('status:name', 'Added')
+      ->execute();
+  }
+
+  /**
+   * Function to remove contact from group
+   *
+   * @param int $contactId
+   * @param int $groupId
+   *
+   * @return void
+   */
+  public static function removeGroup($contactId, $groupId) {
+    // update group status to removed
+    \Civi\Api4\GroupContact::update(FALSE)
+      ->addValue('status:name', 'Removed')
+      ->addWhere('group_id', '=', $groupId)
+      ->addWhere('contact_id', '=', $contactId)
+      ->execute();
+  }
+
+  /**
+   * Function to update optout field
+   *
+   * @param int $contactId
+   * @param int $optout
+   *
+   * @return void
+   */
+  public static function updateOptOut($contactId, $optout) {
+    \Civi\Api4\Contact::update(FALSE)
+      ->addValue('is_opt_out', $optout)
+      ->addWhere('id', '=', $contactId)
+      ->execute();
   }
 
   /**
@@ -80,20 +150,20 @@ class Group {
    */
   public static function buildGroupData($groups, $currentGroups) {
     // build groups array based on contact groups
-    $groups = [];
+    $buildGroups = [];
     foreach ($groups as $publicGroup) {
       $contactIsPartOfGroup = FALSE;
       foreach ($currentGroups as $contactGroup) {
-        if ($contactGroup['group_id'] == $publicGroup['id']) {
+        if ($contactGroup['group_id'] == $publicGroup['id'] && $contactGroup['status'] == 'Added') {
           $contactIsPartOfGroup = TRUE;
           break;
         }
       }
 
-      $groups['group_' . $publicGroup['id']] = $contactIsPartOfGroup;
+      $buildGroups['group_' . $publicGroup['id']] = $contactIsPartOfGroup;
     }
 
-    return $groups;
+    return $buildGroups;
 
   }
 
