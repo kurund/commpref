@@ -27,7 +27,7 @@ class Group {
     // loop through submitted groups
     foreach ($submittedGroups as $field => $value) {
       // check if it's a group field
-      if (strpos($field, 'group_') == FALSE) {
+      if (strpos($field, 'group_') === FALSE) {
         continue;
       }
 
@@ -35,25 +35,41 @@ class Group {
       $groupId = str_replace('group_', '', $field);
 
       // check if the group is in the current groups
-
-      // determine if group is part of current group
+      $currentGroupInfo = [];
+      foreach ($currentGroups as $currentGroup) {
+        if ($currentGroup['group_id'] == $groupId) {
+          $currentGroupInfo = $currentGroup;
+          break;
+        }
+      }
 
       // check the sumbitted value
-
       // if the value is 1, and not part of current groups, add the group
-
       // if the value is 1, and part of current groups, update group status to 'Added'
-
-      // if the value is 0, and part of current groups, update group status to 'Removed'
-
-      // if the value is 0, and not part of current groups, do nothing
+      if ($value == 1) {
+        // add the group
+        if (empty($currentGroupInfo)) {
+          self::addGroup($contactId, $groupId);
+        }
+        // update group status to 'Added'
+        elseif ($currentGroupInfo['status'] != 'Added') {
+          self::updateGroupStatus($contactId, $groupId, 'Added');
+        }
+        // else do nothing
+      }
+      else {
+        // if the value is 0, and part of current groups, update group status to 'Removed'
+        if (!empty($currentGroupInfo) && $currentGroupInfo['status'] != 'Removed') {
+          self::updateGroupStatus($contactId, $groupId, 'Removed');
+        }
+        // if the value is 0, and not part of current groups, do nothing
+      }
 
     }
 
     // update contact optout field
     self::updateOptOut($contactId, $submittedGroups['email_optout']);
 
-    exit;
     return [
       'prev' => ['optout' => $currentOptout, 'groups' => $currentGroups],
       'current' => ['optout' => $submittedGroups['email_optout'], 'groups' => $submittedGroups],
@@ -78,17 +94,17 @@ class Group {
   }
 
   /**
-   * Function to remove contact from group
+   * Function to update contact group status
    *
    * @param int $contactId
    * @param int $groupId
    *
    * @return void
    */
-  public static function removeGroup($contactId, $groupId) {
+  public static function updateGroupStatus($contactId, $groupId, $status = 'Removed') {
     // update group status to removed
     \Civi\Api4\GroupContact::update(FALSE)
-      ->addValue('status:name', 'Removed')
+      ->addValue('status:name', $status)
       ->addWhere('group_id', '=', $groupId)
       ->addWhere('contact_id', '=', $contactId)
       ->execute();
