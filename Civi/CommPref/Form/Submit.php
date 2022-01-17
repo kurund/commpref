@@ -27,8 +27,28 @@ class Submit {
     $phoneData = \Civi\CommPref\BAO\Phone::process($contactId, $submittedValues[0]['joins']['CommPrefPhone']);
 
     // record activity
+    $commonActivityParams = [
+      'source_contact_id' => $contactId,
+      'target_contact_id' => $contactId,
+      'status_id' => 'Completed',
+      'activity_date_time' => date('YmdHis'),
+    ];
+
     // comm pref updated
+    $commPrefActivityParams = [
+      'subject' => 'Communication Preference Updated',
+      'activity_type_id' => 'update_communication_preferences',
+    ];
+
+    \Civi\CommPref\BAO\Activity::record($commonActivityParams + $commPrefActivityParams);
+
     // privacy policy accepted
+    $privacyActivityParams = [
+      'subject' => 'Communication Preference Updated',
+      'activity_type_id' => 'accept_privacy_policy',
+    ];
+
+    \Civi\CommPref\BAO\Activity::record($commonActivityParams + $privacyActivityParams);
 
   }
 
