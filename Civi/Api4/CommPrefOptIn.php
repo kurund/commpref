@@ -37,7 +37,6 @@ class CommPrefOptIn extends Generic\AbstractEntity {
           'data_type' => 'String',
           "description" => "Comma separated list of group id's",
           'title' => 'Group IDs',
-          'label' => 'Group IDs',
           'required' => TRUE,
         ],
         [
@@ -49,6 +48,11 @@ class CommPrefOptIn extends Generic\AbstractEntity {
             "maxlength" => 254,
           ],
           "label" => "Email address",
+        ],
+        [
+          'name' => 'skip_email_verification',
+          'data_type' => 'Boolean',
+          'title' => 'Skip Email Verification',
         ],
       ];
     }))->setCheckPermissions($checkPermissions);

@@ -14,7 +14,11 @@ class Create extends \Civi\Api4\Generic\BasicCreateAction {
     // check if email is passed andf process email update
     $emailDetails = [];
     if (!empty($item['email'])) {
-      $emailDetails = \Civi\CommPref\BAO\Email::process($item['contact_id'], $item['email']);
+      $skipEmailVerification = FALSE;
+      if (!empty($item['skip_email_verification'])) {
+        $skipEmailVerification = TRUE;
+      }
+      $emailDetails = \Civi\CommPref\BAO\Email::process($item['contact_id'], $item['email'], $skipEmailVerification);
     }
 
     // process groups and update opt out
@@ -25,6 +29,7 @@ class Create extends \Civi\Api4\Generic\BasicCreateAction {
     // enable email opt in
     $groupParams += ['email_opt_out' => 0];
 
+    print_r($groupParams); exit;
     $groupDetails = \Civi\CommPref\BAO\Group::process($item['contact_id'], $groupParams);
 
     return $item;
