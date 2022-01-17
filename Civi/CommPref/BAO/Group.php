@@ -8,16 +8,12 @@ class Group {
    * Function to process groups
    *
    * @param int $contactId
-   * @param array $params
+   * @param array $submittedGroups
    *
    * @return void
    */
-  public static function process($contactId, $params) {
-    // submitted values
-    $submittedGroups = $params[0];
-
-    // Array ( [email_optout] => [group_2] => [group_3] => [group_4] => 1 )
-
+  public static function process($contactId, $submittedGroups) {
+    // submitted Array ( [email_optout] => [group_2] => [group_3] => [group_4] => 1 )
     // get current optout status
     $currentOptout = self::getContactOptOutStatus($contactId);
 

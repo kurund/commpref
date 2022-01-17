@@ -8,14 +8,11 @@ class Email {
    * Function to save the email
    *
    * @param int $contactId
-   * @param array $params
+   * @param string $email
    *
    * @return void
    */
-  public static function process($contactId, $params) {
-    // submitted values
-    $submittedEmail = $params[0]['email'];
-
+  public static function process($contactId, $submittedEmail) {
     // get email information
     $currentEmail = self::getEmail($contactId);
 

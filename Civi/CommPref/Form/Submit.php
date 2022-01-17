@@ -17,10 +17,11 @@ class Submit {
     $contactId = $submittedValues[0]['fields']['id'];
 
     // process groups
-    $groupData = \Civi\CommPref\BAO\Group::process($contactId, $submittedValues[0]['joins']['CommPrefGroup']);
+    $groupData = \Civi\CommPref\BAO\Group::process($contactId, $submittedValues[0]['joins']['CommPrefGroup'][0]);
 
     // process emails
-    $emailData = \Civi\CommPref\BAO\Email::process($contactId, $submittedValues[0]['joins']['CommPrefEmail']);
+    $emailData = \Civi\CommPref\BAO\Email::process(
+      $contactId, $submittedValues[0]['joins']['CommPrefEmail'][0]['email']);
 
     // process phone
     $phoneData = \Civi\CommPref\BAO\Phone::process($contactId, $submittedValues[0]['joins']['CommPrefPhone']);
