@@ -26,7 +26,33 @@ class Submit {
     // process phone
     $phoneData = \Civi\CommPref\BAO\Phone::process($contactId, $submittedValues[0]['joins']['CommPrefPhone']);
 
-    // record activity
+    // record activities
+    // 1. comm pref updated
+    $commPrefActivityParams = [
+      'subject' => 'Communication Preference Updated',
+      'activity_type_id:name' => 'update_communication_preferences',
+    ];
+
+    self::recordActivity($contactId, $commPrefActivityParams);
+
+    // 2. privacy policy accepted
+    $privacyActivityParams = [
+      'subject' => 'Communication Preference Updated',
+      'activity_type_id:name' => 'accept_privacy_policy',
+    ];
+
+    self::recordActivity($contactId, $privacyActivityParams);
+  }
+
+  /**
+   * Function to record activity
+   *
+   * @param int $contactId
+   * @param array $params
+   *
+   * @return void
+   */
+  public static function recordActivity($contactId, $params) {
     $commonActivityParams = [
       'source_contact_id' => $contactId,
       'target_contact_id' => $contactId,
@@ -34,22 +60,7 @@ class Submit {
       'activity_date_time' => date('YmdHis'),
     ];
 
-    // comm pref updated
-    $commPrefActivityParams = [
-      'subject' => 'Communication Preference Updated',
-      'activity_type_id:name' => 'update_communication_preferences',
-    ];
-
-    \Civi\CommPref\BAO\Activity::record($commonActivityParams + $commPrefActivityParams);
-
-    // privacy policy accepted
-    $privacyActivityParams = [
-      'subject' => 'Communication Preference Updated',
-      'activity_type_id:name' => 'accept_privacy_policy',
-    ];
-
-    \Civi\CommPref\BAO\Activity::record($commonActivityParams + $privacyActivityParams);
-
+    \Civi\CommPref\BAO\Activity::record($commonActivityParams + $params);
   }
 
 }

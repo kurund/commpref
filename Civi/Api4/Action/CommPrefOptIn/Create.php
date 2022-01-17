@@ -29,7 +29,6 @@ class Create extends \Civi\Api4\Generic\BasicCreateAction {
     // enable email opt in
     $groupParams += ['email_opt_out' => 0];
 
-    print_r($groupParams); exit;
     $groupDetails = \Civi\CommPref\BAO\Group::process($item['contact_id'], $groupParams);
 
     return $item;
