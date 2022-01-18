@@ -54,6 +54,16 @@ class CommPrefOptIn extends Generic\AbstractEntity {
           'data_type' => 'Boolean',
           'title' => 'Skip Email Verification',
         ],
+        [
+          'name' => 'source',
+          'data_type' => 'String',
+          'title' => 'Source',
+          "input_type" => "Text",
+          "input_attrs" => [
+            "maxlength" => 254,
+          ],
+          "label" => "Source",
+        ],
       ];
     }))->setCheckPermissions($checkPermissions);
   }

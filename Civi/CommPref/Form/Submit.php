@@ -29,7 +29,6 @@ class Submit {
     // record activities
     // 1. comm pref updated
     $commPrefActivityParams = [
-      'subject' => 'Communication Preference Updated',
       'activity_type_id:name' => 'update_communication_preferences',
     ];
 
@@ -37,7 +36,6 @@ class Submit {
 
     // 2. privacy policy accepted
     $privacyActivityParams = [
-      'subject' => 'Communication Preference Updated',
       'activity_type_id:name' => 'accept_privacy_policy',
     ];
 
@@ -54,10 +52,8 @@ class Submit {
    */
   public static function recordActivity($contactId, $params) {
     $commonActivityParams = [
-      'source_contact_id' => $contactId,
-      'target_contact_id' => $contactId,
-      'status_id:name' => 'Completed',
-      'activity_date_time' => date('YmdHis'),
+      'subject' => 'Communication Preference Updated',
+      'contact_id' => $contactId,
     ];
 
     \Civi\CommPref\BAO\Activity::record($commonActivityParams + $params);
