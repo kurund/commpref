@@ -65,12 +65,17 @@ class Submit {
 
       switch ($key) {
         case 'groups':
-          $details .= '<br />' . 'Groups:';
+
+          if ($value['prev']['optout'] != $value['new']['optout']) {
+            $details .= '<br />' . ($value['new']['optout'] ? 'Contact has opted out' : 'Contact has opted in');
+          }
           break;
 
         case 'email':
           $details .= '<br />' . 'New Email: ' . $value['new'];
-          $details .= '<br />' . 'Previous Email: ' . $value['prev'];
+          if (!empty($value['prev'])) {
+            $details .= '<br />' . 'Previous Email: ' . $value['prev'];
+          }
           break;
 
         case 'phone':

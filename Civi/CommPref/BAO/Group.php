@@ -68,7 +68,7 @@ class Group {
 
     return [
       'prev' => ['optout' => $currentOptout, 'groups' => $currentGroups],
-      'current' => ['optout' => $submittedGroups['email_optout'], 'groups' => $submittedGroups],
+      'new' => ['optout' => $submittedGroups['email_optout'], 'groups' => $submittedGroups],
     ];
   }
 
