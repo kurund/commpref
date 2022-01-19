@@ -33,7 +33,9 @@ class Email {
       // if email verification is enabled, and skipEmailVerification is FALSE
       // skipEmailVerification can we set as TRUE using OptIn API
       $isPrimaryLocation = FALSE;
+      $underVerification = FALSE;
       if ($verifyEmail && !$skipEmailVerification) {
+        $underVerification = TRUE;
         // get the verification location type as per settings
         $locationTypeId = \Civi::settings()->get('commpref_verify_location_type');
 
@@ -63,8 +65,8 @@ class Email {
     }
 
     return [
-      'prev' => $submittedEmail,
-      'current' => $currentEmail,
+      'prev' => $currentEmail,
+      'new' => (!$underVerification) ? $submittedEmail : $submittedEmail . ' (Needs Verification)',
     ];
   }
 

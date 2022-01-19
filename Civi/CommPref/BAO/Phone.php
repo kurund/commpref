@@ -20,10 +20,18 @@ class Phone {
     // get phone information
     [$mobileNumber, $landlineNumber] = self::getPhone($contactId);
 
+    // return early if phones are same
+    if ($phoneMobile == $mobileNumber && $phoneLandline == $landlineNumber) {
+      return;
+    }
+
     // update or delete phone numbers
     // mobile
     if (empty($phoneMobile) && !empty($mobileNumber)) {
       self::deletePhone($contactId, 'Mobile');
+    }
+    elseif (!empty($phoneMobile) && empty($mobileNumber)) {
+      self::addPhone($contactId, $phoneMobile, 'Mobile');
     }
     elseif ($phoneMobile != $mobileNumber) {
       self::updatePhone($contactId, $phoneMobile, 'Mobile');
@@ -33,14 +41,34 @@ class Phone {
     if (empty($phoneLandline) && !empty($landlineNumber)) {
       self::deletePhone($contactId, 'Phone');
     }
+    elseif (!empty($phoneLandline) && empty($landlineNumber)) {
+      self::addPhone($contactId, $phoneLandline, 'Phone');
+    }
     elseif ($phoneLandline != $landlineNumber) {
       self::updatePhone($contactId, $phoneLandline, 'Phone');
     }
 
     return [
-      'prev' => [$phoneMobile, $phoneLandline],
-      'current' => [$mobileNumber, $landlineNumber],
+      'prev' => [$mobileNumber, $landlineNumber],
+      'new' => [$phoneMobile, $phoneLandline],
     ];
+  }
+
+  /**
+   * Function to add phone number
+   *
+   * @param int $contactId
+   * @param string $phoneNumber
+   * @param string $phoneType
+   *
+   * @return void
+   */
+  public static function addPhone($contactId, $phoneNumber, $phoneType) {
+    \Civi\Api4\Phone::create(FALSE)
+      ->addValue('contact_id', $contactId)
+      ->addValue('phone', $phoneNumber)
+      ->addValue('phone_type_id:name', $phoneType)
+      ->execute();
   }
 
   /**

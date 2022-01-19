@@ -28,8 +28,15 @@ class Submit {
 
     // record activities
     // 1. comm pref updated
+    $commPrefActivityDetails = self::formatActivityDetails([
+      'groups' => $groupData,
+      'email' => $emailData,
+      'phone' => $phoneData,
+    ]);
+
     $commPrefActivityParams = [
       'activity_type_id:name' => 'update_communication_preferences',
+      'details' => $commPrefActivityDetails,
     ];
 
     self::recordActivity($contactId, $commPrefActivityParams);
@@ -40,6 +47,50 @@ class Submit {
     ];
 
     self::recordActivity($contactId, $privacyActivityParams);
+  }
+
+  /**
+   * Function to format activity details for comm pref
+   *
+   * @param array $params
+   *
+   * @return string
+   */
+  public static function formatActivityDetails($params) {
+    $details = '';
+    foreach ($params as $key => $value) {
+      if (empty($value)) {
+        continue;
+      }
+
+      switch ($key) {
+        case 'groups':
+          $details .= '<br />' . 'Groups:';
+          break;
+
+        case 'email':
+          $details .= '<br />' . 'New Email: ' . $value['new'];
+          $details .= '<br />' . 'Previous Email: ' . $value['prev'];
+          break;
+
+        case 'phone':
+          if ($value['prev'][0] != $value['new'][0]) {
+            $details .= '<br />' . 'New Mobile Number: ' . $value['new'][0];
+            if (!empty($value['prev'][0])) {
+              $details .= '<br />' . 'Previous Mobile Number: ' . $value['prev'][0];
+            }
+          }
+          if ($value['prev'][1] != $value['new'][1]) {
+            $details .= '<br />' . 'New Landline Number: ' . $value['new'][1];
+            if (!empty($value['prev'][1])) {
+              $details .= '<br />' . 'Previous Landline Number: ' . $value['prev'][1];
+            }
+          }
+          break;
+      }
+    }
+
+    return $details;
   }
 
   /**
