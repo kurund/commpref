@@ -65,10 +65,32 @@ class Submit {
 
       switch ($key) {
         case 'groups':
-
           if ($value['prev']['optout'] != $value['new']['optout']) {
             $details .= '<br />' . ($value['new']['optout'] ? 'Contact has opted out' : 'Contact has opted in');
           }
+
+          if (!empty($value['new']['groups'])) {
+            // get all public groups
+            $publicGroups = \Civi\CommPref\BAO\Group::getPublicGroups();
+            $flatternGroupList = [];
+            foreach ($publicGroups as $group) {
+              $flatternGroupList[$group['id']] = $group['title'];
+            }
+
+            foreach ($value['new']['groups'] as $groupId => $status) {
+              if ($status['new'] == 'Added') {
+                $details .= '<br />' . $flatternGroupList[$groupId] . ' was added.';
+
+                if (!empty($status['prev'])) {
+                  $details .= ' (Prev: ' . $status['prev'] . ')';
+                }
+              }
+              elseif ($status['new'] == 'Removed') {
+                $details .= '<br />' . $flatternGroupList[$groupId] . ' was removed.';
+              }
+            }
+          }
+
           break;
 
         case 'email':

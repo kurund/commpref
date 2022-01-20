@@ -20,6 +20,9 @@ class Group {
     // get the current groups for this contact
     $currentGroups = self::getCurrentGroups($contactId);
 
+    // track group changes
+    $groupChanges = [];
+
     // loop through submitted groups
     foreach ($submittedGroups as $field => $value) {
       // check if it's a group field
@@ -46,10 +49,15 @@ class Group {
         // add the group
         if (empty($currentGroupInfo)) {
           self::addGroup($contactId, $groupId);
+          $groupChanges[$groupId] = ['new' => 'Added'];
         }
         // update group status to 'Added'
         elseif ($currentGroupInfo['status'] != 'Added') {
           self::updateGroupStatus($contactId, $groupId, 'Added');
+          $groupChanges[$groupId] = [
+            'prev' => $currentGroupInfo['status'],
+            'new' => 'Added',
+          ];
         }
         // else do nothing
       }
@@ -57,6 +65,10 @@ class Group {
         // if the value is 0, and part of current groups, update group status to 'Removed'
         if (!empty($currentGroupInfo) && $currentGroupInfo['status'] != 'Removed') {
           self::updateGroupStatus($contactId, $groupId, 'Removed');
+          $groupChanges[$groupId] = [
+            'prev' => $currentGroupInfo['status'],
+            'new' => 'Removed',
+          ];
         }
         // if the value is 0, and not part of current groups, do nothing
       }
@@ -68,7 +80,7 @@ class Group {
 
     return [
       'prev' => ['optout' => $currentOptout, 'groups' => $currentGroups],
-      'new' => ['optout' => $submittedGroups['email_optout'], 'groups' => $submittedGroups],
+      'new' => ['optout' => $submittedGroups['email_optout'], 'groups' => $groupChanges],
     ];
   }
 
