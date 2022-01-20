@@ -12,13 +12,13 @@ class Create extends \Civi\Api4\Generic\BasicCreateAction {
 
   protected function writeRecord($item) {
     // check if email is passed andf process email update
-    $emailDetails = [];
+    $emailData = [];
     if (!empty($item['email'])) {
       $skipEmailVerification = FALSE;
       if (!empty($item['skip_email_verification'])) {
         $skipEmailVerification = TRUE;
       }
-      $emailDetails = \Civi\CommPref\BAO\Email::process($item['contact_id'], $item['email'], $skipEmailVerification);
+      $emailData = \Civi\CommPref\BAO\Email::process($item['contact_id'], $item['email'], $skipEmailVerification);
     }
 
     // process groups and update opt out
@@ -29,10 +29,10 @@ class Create extends \Civi\Api4\Generic\BasicCreateAction {
     // enable email opt in
     $groupParams += ['email_opt_out' => 0];
 
-    $groupDetails = \Civi\CommPref\BAO\Group::process($item['contact_id'], $groupParams);
+    $groupData = \Civi\CommPref\BAO\Group::process($item['contact_id'], $groupParams);
 
     // record activity
-    self::recordActivity($item);
+    self::recordActivity($item, $groupData, $emailData);
 
     return $item;
 
@@ -42,13 +42,21 @@ class Create extends \Civi\Api4\Generic\BasicCreateAction {
    * Function to record activity
    *
    * @param array $params
+   * @param array $groupData
+   * @param array $emailData
    *
    * @return void
    */
-  public static function recordActivity($params) {
+  public static function recordActivity($params, $groupData, $emailData) {
     // 1. comm pref updated
+    $commPrefActivityDetails = \Civi\CommPref\BAO\Activity::formatActivityDetails([
+      'groups' => $groupData,
+      'email' => $emailData,
+    ]);
+
     $commPrefActivityParams = [
       'activity_type_id:name' => 'update_communication_preferences',
+      'details' => $commPrefActivityDetails,
     ];
 
     \Civi\CommPref\BAO\Activity::record($commPrefActivityParams + $params);
@@ -59,7 +67,6 @@ class Create extends \Civi\Api4\Generic\BasicCreateAction {
     ];
 
     \Civi\CommPref\BAO\Activity::record($privacyActivityParams + $params);
-
   }
 
   /**
