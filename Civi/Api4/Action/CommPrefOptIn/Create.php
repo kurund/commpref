@@ -31,42 +31,10 @@ class Create extends \Civi\Api4\Generic\BasicCreateAction {
 
     $groupData = \Civi\CommPref\BAO\Group::process($item['contact_id'], $groupParams);
 
-    // record activity
-    self::recordActivity($item, $groupData, $emailData);
+    // record activities
+    \Civi\CommPref\BAO\Activity::record($item['contact_id'], $groupData, $emailData);
 
     return $item;
-
-  }
-
-  /**
-   * Function to record activity
-   *
-   * @param array $params
-   * @param array $groupData
-   * @param array $emailData
-   *
-   * @return void
-   */
-  public static function recordActivity($params, $groupData, $emailData) {
-    // 1. comm pref updated
-    $commPrefActivityDetails = \Civi\CommPref\BAO\Activity::formatActivityDetails([
-      'groups' => $groupData,
-      'email' => $emailData,
-    ]);
-
-    $commPrefActivityParams = [
-      'activity_type_id:name' => 'update_communication_preferences',
-      'details' => $commPrefActivityDetails,
-    ];
-
-    \Civi\CommPref\BAO\Activity::record($commPrefActivityParams + $params);
-
-    // 2. privacy policy accepted
-    $privacyActivityParams = [
-      'activity_type_id:name' => 'accept_privacy_policy',
-    ];
-
-    \Civi\CommPref\BAO\Activity::record($privacyActivityParams + $params);
   }
 
   /**

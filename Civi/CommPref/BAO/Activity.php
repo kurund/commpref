@@ -11,7 +11,7 @@ class Activity {
    *
    * @return void
    */
-  public static function record($params) {
+  public static function add($params) {
     $commonActivityParams = [
       'source_contact_id' => $params['contact_id'],
       'target_contact_id' => $params['contact_id'],
@@ -26,6 +26,41 @@ class Activity {
     \Civi\Api4\Activity::create()
       ->setValues($commonActivityParams + $params)
       ->execute();
+  }
+
+  /**
+   * Function to record activities
+   *
+   * @param int $contactId
+   * @param array $groupData
+   * @param array $emailData
+   * @param array $phoneData
+   *
+   * @return void
+   */
+  public static function record($contactId, $groupData, $emailData = [], $phoneData = []) {
+    // 1. comm pref updated
+    $commPrefActivityDetails = self::formatActivityDetails([
+      'groups' => $groupData,
+      'email' => $emailData,
+      'phone' => $phoneData,
+    ]);
+
+    $commPrefActivityParams = [
+      'activity_type_id:name' => 'update_communication_preferences',
+      'details' => $commPrefActivityDetails,
+      'contact_id' => $contactId,
+    ];
+
+    self::add($commPrefActivityParams);
+
+    // 2. privacy policy accepted
+    $privacyActivityParams = [
+      'activity_type_id:name' => 'accept_privacy_policy',
+      'contact_id' => $contactId,
+    ];
+
+    self::add($privacyActivityParams);
   }
 
   /**
