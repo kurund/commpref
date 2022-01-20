@@ -32,7 +32,7 @@ class Create extends \Civi\Api4\Generic\BasicCreateAction {
     $groupData = \Civi\CommPref\BAO\Group::process($item['contact_id'], $groupParams);
 
     // record activities
-    \Civi\CommPref\BAO\Activity::record($item['contact_id'], $groupData, $emailData);
+    \Civi\CommPref\BAO\Activity::record($item['contact_id'], $item['source'], $groupData, $emailData);
 
     return $item;
   }

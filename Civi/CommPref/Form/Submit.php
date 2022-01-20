@@ -27,7 +27,7 @@ class Submit {
     $phoneData = \Civi\CommPref\BAO\Phone::process($contactId, $submittedValues[0]['joins']['CommPrefPhone']);
 
     // record activities
-    \Civi\CommPref\BAO\Activity::record($contactId, $groupData, $emailData, $phoneData);
+    \Civi\CommPref\BAO\Activity::record($contactId, 'Communication Preference Updated', $groupData, $emailData, $phoneData);
   }
 
 }

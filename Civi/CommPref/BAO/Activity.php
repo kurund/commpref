@@ -19,10 +19,6 @@ class Activity {
       'activity_date_time' => date('YmdHis'),
     ];
 
-    if (!empty($params['source'])) {
-      $commonActivityParams['subject'] = $params['source'];
-    }
-
     \Civi\Api4\Activity::create()
       ->setValues($commonActivityParams + $params)
       ->execute();
@@ -32,13 +28,14 @@ class Activity {
    * Function to record activities
    *
    * @param int $contactId
+   * @param string $subject
    * @param array $groupData
    * @param array $emailData
    * @param array $phoneData
    *
    * @return void
    */
-  public static function record($contactId, $groupData, $emailData = [], $phoneData = []) {
+  public static function record($contactId, $subject, $groupData, $emailData = [], $phoneData = []) {
     // 1. comm pref updated
     $commPrefActivityDetails = self::formatActivityDetails([
       'groups' => $groupData,
@@ -50,6 +47,7 @@ class Activity {
       'activity_type_id:name' => 'update_communication_preferences',
       'details' => $commPrefActivityDetails,
       'contact_id' => $contactId,
+      'subject' => $subject,
     ];
 
     self::add($commPrefActivityParams);
@@ -58,6 +56,7 @@ class Activity {
     $privacyActivityParams = [
       'activity_type_id:name' => 'accept_privacy_policy',
       'contact_id' => $contactId,
+      'subject' => $subject,
     ];
 
     self::add($privacyActivityParams);
