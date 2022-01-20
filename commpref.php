@@ -180,3 +180,18 @@ function commpref_civicrm_navigationMenu(&$menu) {
   ]);
   _commpref_civix_navigationMenu($menu);
 }
+
+/**
+ * Implement hook_civicrm_tokens
+ *
+ * Let's add the comm pref tokens to the token list
+ *
+ * @param $tokens list of tokens
+ *
+ * @return void
+ */
+function commpref_civicrm_tokens(&$tokens) {
+  $tokens['commpref'] = [
+    'commpref.email_verification_url' => 'Email verification URL',
+  ];
+}

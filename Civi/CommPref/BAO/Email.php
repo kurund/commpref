@@ -48,7 +48,7 @@ class Email {
         $underVerification = TRUE;
         $locationTypeId = $verifyLocationTypeId;
         // TODOS: send verification email
-
+        self::sendVerificationEmail($contactId, $submittedEmail);
       }
       else {
         // set primary location type as location type
@@ -76,6 +76,21 @@ class Email {
       'prev' => $currentEmail,
       'new' => (!$underVerification) ? $submittedEmail : $submittedEmail . ' (Needs Verification)',
     ];
+  }
+
+  /**
+   * Function to send verification email
+   *
+   * @param int $contactId
+   * @param string $email
+   *
+   * @return void
+   */
+  public static function sendVerificationEmail($contactId, $email) {
+    // get verification template
+
+    // send email
+
   }
 
   /**
