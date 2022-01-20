@@ -25,20 +25,28 @@ class Email {
     // get location types
     [$primaryLocationTypeId, $otherLocationTypeId] = self::getLocationTypes();
 
-    // check if email exists for the contact
-    if (!self::checkEmailExist($contactId, $submittedEmail)) {
-      // check if email verification is enabled
-      $verifyEmail = \Civi::settings()->get('commpref_verify_email');
+    // check if email verification is enabled
+    $verifyEmail = \Civi::settings()->get('commpref_verify_email');
 
+    // get the verification location type as per settings
+    $verifyLocationTypeId = \Civi::settings()->get('commpref_verify_location_type');
+
+    // check if email exists for the contact
+    $existingEmailLocationTypeId = self::checkEmailExist($contactId, $submittedEmail);
+
+    if ($verifyEmail && !empty($verifyLocationTypeId) && $verifyLocationTypeId == $existingEmailLocationTypeId) {
+      // since email is unverified do nothing
+      return;
+    }
+
+    if (!$existingEmailLocationTypeId) {
       // if email verification is enabled, and skipEmailVerification is FALSE
       // skipEmailVerification can we set as TRUE using OptIn API
       $isPrimaryLocation = FALSE;
       $underVerification = FALSE;
       if ($verifyEmail && !$skipEmailVerification) {
         $underVerification = TRUE;
-        // get the verification location type as per settings
-        $locationTypeId = \Civi::settings()->get('commpref_verify_location_type');
-
+        $locationTypeId = $verifyLocationTypeId;
         // TODOS: send verification email
 
       }
@@ -98,12 +106,12 @@ class Email {
    */
   public static function checkEmailExist($contactId, $email) {
     $emails = \Civi\Api4\Email::get(FALSE)
-      ->addSelect('email')
+      ->addSelect('email', 'location_type_id')
       ->addWhere('contact_id', '=', $contactId)
       ->addWhere('email', '=', $email)
       ->execute();
 
-    return $emails->rowCount ? TRUE : FALSE;
+    return $emails->rowCount ? $emails[0]['location_type_id'] : FALSE;
   }
 
   /**
