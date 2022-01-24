@@ -5,6 +5,9 @@ require_once 'commpref.civix.php';
 use CRM_Commpref_ExtensionUtil as E;
 // phpcs:enable
 
+use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+
 /**
  * Implements hook_civicrm_config().
  *
@@ -182,16 +185,41 @@ function commpref_civicrm_navigationMenu(&$menu) {
 }
 
 /**
- * Implement hook_civicrm_tokens
+ * Add token services to the container.
  *
- * Let's add the comm pref tokens to the token list
- *
- * @param $tokens list of tokens
- *
- * @return void
+ * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
  */
-function commpref_civicrm_tokens(&$tokens) {
-  $tokens['commpref'] = [
-    'commpref.email_verification_url' => 'Email verification URL',
-  ];
+function commpref_civicrm_container(ContainerBuilder $container) {
+  $container->addResource(new FileResource(__FILE__));
+  $container->findDefinition('dispatcher')->addMethodCall('addListener',
+    ['civi.token.list', 'commpref_register_tokens']
+  )->setPublic(TRUE);
+  $container->findDefinition('dispatcher')->addMethodCall('addListener',
+    ['civi.token.eval', 'commpref_evaluate_tokens']
+  )->setPublic(TRUE);
+}
+
+function commpref_register_tokens(\Civi\Token\Event\TokenRegisterEvent $e) {
+  $e->entity('commpref')
+    ->register('emailVerificationUrl', ts('Email verification URL')
+  );
+}
+
+function commpref_evaluate_tokens(\Civi\Token\Event\TokenValueEvent $e) {
+  $commPrefContext = $e->getTokenProcessor()->context['commprefEmailVerification'];
+  if (!empty($commPrefContext)) {
+    // get email verification url
+    $emailVerifyURL = \Civi\CommPref\BAO\Email::getEmailVerificationUrl(
+      $commPrefContext['contactId'],
+      $commPrefContext['email']
+    );
+
+    foreach ($e->getRows() as $row) {
+      $row->tokens('commpref',
+        'emailVerificationUrl',
+        $emailVerifyURL,
+        );
+    }
+  }
+
 }

@@ -35,7 +35,8 @@ class Email {
     $existingEmailLocationTypeId = self::checkEmailExist($contactId, $submittedEmail);
 
     if ($verifyEmail && !empty($verifyLocationTypeId) && $verifyLocationTypeId == $existingEmailLocationTypeId) {
-      // since email is unverified do nothing
+      // since email is unverified resend verification email
+      self::sendVerificationEmail($contactId, $submittedEmail);
       return;
     }
 
@@ -47,7 +48,8 @@ class Email {
       if ($verifyEmail && !$skipEmailVerification) {
         $underVerification = TRUE;
         $locationTypeId = $verifyLocationTypeId;
-        // TODOS: send verification email
+
+        // send verification email
         self::sendVerificationEmail($contactId, $submittedEmail);
       }
       else {
@@ -88,9 +90,50 @@ class Email {
    */
   public static function sendVerificationEmail($contactId, $email) {
     // get verification template
+    $messageTemplates = \Civi\Api4\MessageTemplate::get(FALSE)
+      ->addSelect('msg_subject', 'msg_text', 'msg_html')
+      ->addWhere('workflow_name', '=', 'commpref_email_verification')
+      ->execute();
+
+    [$domainEmailName, $domainEmailAddress] = \CRM_Core_BAO_Domain::getNameAndEmail();
+
+    // set token context for email verification
+    $tokenContext = [
+      'email' => $email,
+      'contactId' => $contactId,
+    ];
 
     // send email
+    $emailParams = [
+      'contactId' => $contactId,
+      'id' => $messageTemplates[0]['id'],
+      'from' => "$domainEmailName <" . $domainEmailAddress . ">",
+      'toEmail' => $email,
+      'tokenContext' => array("commprefEmailVerification" => $tokenContext),
+      'valueName' => 'commpref_email_verification',
+    ];
 
+    civicrm_api3('MessageTemplate', 'send', $emailParams);
+  }
+
+  /**
+   * Function to build email verify url
+   *
+   * @param int $contactId
+   * @param string $email
+   *
+   * @return string
+   */
+  public static function getEmailVerificationUrl($contactId, $email) {
+    // generate contact checksum
+    $contactChecksum = \CRM_Contact_BAO_Contact_Utils::generateChecksum($contactId, NULL, TRUE);
+    $url = \CRM_Utils_System::url('civicrm/commpref/verifyemail', [
+      'cid' => $contactId,
+      'cs' => $contactChecksum,
+      'e' => $email,
+    ], TRUE, NULL, TRUE);
+
+    return $url;
   }
 
   /**

@@ -5,12 +5,12 @@
     <title></title>
   </head>
   <body>
-    <center>
+    <div>
     <p>Thank you for updating your email on {domain.name}</p>
 
     <p>Kindly verify your email by visiting the following address:</p>
 
-    <p>{commpref.email_verification_url}</p>
-    </center>
+    <p><a href="{commpref.emailVerificationUrl}">{commpref.emailVerificationUrl}</a></p>
+    </div>
   </body>
 </html>
