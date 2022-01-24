@@ -131,7 +131,7 @@ class Email {
       'cid' => $contactId,
       'cs' => $contactChecksum,
       'e' => $email,
-    ], TRUE, NULL, TRUE);
+    ], TRUE, NULL, TRUE, TRUE);
 
     return $url;
   }
@@ -236,6 +236,45 @@ class Email {
     }
 
     return [$primaryLocationTypeId, $otherLocationTypeId];
+  }
+
+  /**
+   * Function to verify contact email
+   *
+   * @param int $contactId
+   * @param string $email
+   *
+   * @return bool
+   */
+  public static function verifyContactEmail($contactId, $email) {
+    // check if the email exists for this contact
+    $emailExists = self::checkEmailExist($contactId, $email);
+
+    // if email not found return early
+    if (!$emailExists) {
+      return FALSE;
+    }
+
+    // get primary email
+    $primaryEmail = self::getEmail($contactId);
+
+    // if primary email is same as the email to be verified return early
+    // this means user has already verified the email
+    if ($primaryEmail == $email) {
+      return TRUE;
+    }
+
+    // get location types
+    [$primaryLocationTypeId, $otherLocationTypeId] = self::getLocationTypes();
+
+    // set primary email as 'Other' location type
+    self::updateEmail($contactId, $primaryEmail, $otherLocationTypeId);
+
+    // update the email to primary location type
+    self::updateEmail($contactId, $email, $primaryLocationTypeId, TRUE);
+
+    return TRUE;
+
   }
 
 }
