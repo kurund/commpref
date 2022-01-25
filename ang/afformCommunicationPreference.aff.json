@@ -1,6 +1,6 @@
 {
     "type": "system",
-    "requires": [],
+    "requires": ["commpref"],
     "title": "Communication Preference",
     "description": "",
     "is_dashlet": false,
