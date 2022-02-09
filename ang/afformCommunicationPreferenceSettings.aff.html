@@ -1,5 +1,5 @@
 <af-form ctrl="afform">
-  <af-entity
+  <!-- <af-entity
     data="{contact_type: 'Individual'}"
     type="Contact"
     name="Individual1"
@@ -8,21 +8,28 @@
     security="RBAC"
     url-autofill="0"
     autofill="user"
-  />
-  <!-- <af-entity
+  /> -->
+  <af-entity
     type="CommPrefSettings"
     name="Settings"
     label="Settings"
     actions="{create: true, update: true}"
     security="RBAC"
-  /> -->
-  <div class="af-container">
-    <fieldset af-fieldset="Individual1">
+    autofill="user"
+  />
+  <fieldset af-fieldset="Settings">
+    <div class="af-container af-layout-inline">
       <div af-join="CommPrefSettings">
         <af-field name="commpref_verify_email" />
         <af-field name="commpref_verify_location_type" />
+        <af-field name="commpref_custom_unsubscribe" />
+        <div class="af-markup">
+          <p>Add your (internal) path here. Leave blank to use the default page.</p>
+        </div>
       </div>
-    </fieldset>
+    </div>
+  </fieldset>
+  <div class="af-container">
     <button class="af-button btn btn-primary" crm-icon="fa-check" ng-click="afform.submit()">
       Save
     </button>

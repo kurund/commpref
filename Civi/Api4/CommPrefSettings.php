@@ -40,6 +40,14 @@ class CommPrefSettings extends Generic\AbstractEntity {
           "label" => "Location type for unverified email",
           "options" => \CRM_Core_PseudoConstant::get('CRM_Core_DAO_Address', 'location_type_id'),
         ],
+        [
+          'name' => 'commpref_custom_unsubscribe',
+          'data_type' => 'String',
+          'title' => 'Custom unsubscribe path',
+          "input_type" => "Text",
+          "label" => "Custom unsubscribe path",
+          'description' => 'Redirect unsubscribe requests to another path',
+        ],
       ];
     }))->setCheckPermissions($checkPermissions);
   }

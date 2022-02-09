@@ -18,6 +18,7 @@ class Get extends \Civi\Api4\Generic\BasicGetAction {
     $result[] = [
       'commpref_verify_email' => \Civi::settings()->get('commpref_verify_email'),
       'commpref_verify_location_type' => \Civi::settings()->get('commpref_verify_location_type'),
+      'commpref_custom_unsubscribe' => \Civi::settings()->get('commpref_custom_unsubscribe'),
     ];
   }
 
