@@ -221,5 +221,14 @@ function commpref_evaluate_tokens(\Civi\Token\Event\TokenValueEvent $e) {
         );
     }
   }
+}
 
+/**
+ * Implements hook_civicrm_alterMenu().
+ *
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_alterMenu
+ *
+ */
+function commpref_civicrm_alterMenu(&$items) {
+  \Civi\CommPref\BAO\Unsubscribe::alterMenuMailingUnsubscribe($items);
 }

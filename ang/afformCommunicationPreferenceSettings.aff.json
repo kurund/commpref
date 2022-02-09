@@ -7,7 +7,7 @@
     "is_public": false,
     "is_token": false,
     "server_route": "civicrm/communication-preference-settings",
-    "permission": "access CiviCRM",
+    "permission": "administer CiviCRM",
     "create_submission": false,
     "entity_type": null,
     "join_entity": null,
