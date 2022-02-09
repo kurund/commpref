@@ -13,7 +13,6 @@ use Civi\Api4\Generic\Result;
 class Get extends \Civi\Api4\Generic\BasicGetAction {
 
   public function _run(Result $result) {
-
     // return comm pref settings
     $result[] = [
       'commpref_verify_email' => \Civi::settings()->get('commpref_verify_email'),
